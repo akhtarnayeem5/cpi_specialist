@@ -105,7 +105,7 @@
                 <value>Not Required</value>
             </ifl:property>
         </bpmn2:extensionElements>
-        <bpmn2:callActivity id="CallActivity_7" name="Groovy Script 1">
+        <bpmn2:callActivity id="CallActivity_7" name="GS_LogPayload">
             <bpmn2:extensionElements>
                 <ifl:property>
                     <key>scriptFunction</key>
@@ -153,7 +153,7 @@
             <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
             <bpmn2:messageEventDefinition/>
         </bpmn2:endEvent>
-        <bpmn2:callActivity id="CallActivity_5" name="Content Modifier 1">
+        <bpmn2:callActivity id="CallActivity_5" name="CM_SetProperties">
             <bpmn2:extensionElements>
                 <ifl:property>
                     <key>bodyType</key>
@@ -189,7 +189,7 @@
         </bpmn2:callActivity>
         <bpmn2:startEvent id="StartEvent_4" name="Start Timer 1">
             <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-            <bpmn2:timerEventDefinition id="TimerEventDefinition_184899">
+            <bpmn2:timerEventDefinition id="TimerEventDefinition_34117">
                 <bpmn2:extensionElements>
                     <ifl:property>
                         <key>scheduleKey</key>
