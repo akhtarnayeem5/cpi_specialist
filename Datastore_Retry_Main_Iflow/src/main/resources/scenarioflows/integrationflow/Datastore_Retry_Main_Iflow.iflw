@@ -74,7 +74,7 @@
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:participant>
-        <bpmn2:participant id="Participant_73" ifl:type="EndpointSender" name="Sender1">
+        <bpmn2:participant id="Participant_73" ifl:type="EndpointSender" name="CPI_DataStore">
             <bpmn2:extensionElements>
                 <ifl:property>
                     <key>enableBasicAuthentication</key>
@@ -97,10 +97,10 @@
         <bpmn2:participant id="Participant_Process_55" ifl:type="IntegrationProcess" name="Handle Errors" processRef="Process_55">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1">
+        <bpmn2:participant id="Participant_Process_20" ifl:type="IntegrationProcess" name="Send to Generic Receiver" processRef="Process_20">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant id="Participant_Process_20" ifl:type="IntegrationProcess" name="Send to Generic Receiver" processRef="Process_20">
+        <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:participant id="Participant_Process_72" ifl:type="IntegrationProcess" name="Reprocess from Datastore" processRef="Process_72">
@@ -346,7 +346,7 @@
                 </ifl:property>
                 <ifl:property>
                     <key>authenticationMethod</key>
-                    <value>Basic</value>
+                    <value>OAuth2 Client Credentials</value>
                 </ifl:property>
                 <ifl:property>
                     <key>locationID</key>
@@ -370,7 +370,7 @@
                 </ifl:property>
                 <ifl:property>
                     <key>credentialName</key>
-                    <value>OWN</value>
+                    <value>{{oauth_cred}}</value>
                 </ifl:property>
                 <ifl:property>
                     <key>apiDisplayName</key>
@@ -386,7 +386,7 @@
                 </ifl:property>
                 <ifl:property>
                     <key>httpAddressWithoutQuery</key>
-                    <value>https://916da121trial.it-cpitrial05-rt.cfapps.us10-001.hana.ondemand.com/http/Datastore/GenericReceiver</value>
+                    <value>https://{{tenant_host}}/http/Datastore/GenericReceiver</value>
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
@@ -687,7 +687,7 @@
                     <value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value>
                 </ifl:property>
             </bpmn2:extensionElements>
-            <bpmn2:conditionExpression id="FormalExpression_SequenceFlow_62_1784892188593" xsi:type="bpmn2:tFormalExpression">${property.ErrorType} = 'Connection' and ${property.Sender_System} != 'CPI'</bpmn2:conditionExpression>
+            <bpmn2:conditionExpression id="FormalExpression_SequenceFlow_62_1789632230340" xsi:type="bpmn2:tFormalExpression">${property.ErrorType} = 'Connection' and ${property.Sender_System} != 'CPI'</bpmn2:conditionExpression>
         </bpmn2:sequenceFlow>
         <bpmn2:sequenceFlow id="SequenceFlow_61" name="Config_Retry Errors" sourceRef="ExclusiveGateway_6" targetRef="CallActivity_33">
             <bpmn2:extensionElements>
@@ -707,277 +707,6 @@
         </bpmn2:sequenceFlow>
         <bpmn2:sequenceFlow id="SequenceFlow_60" sourceRef="StartEvent_56" targetRef="ExclusiveGateway_6"/>
         <bpmn2:sequenceFlow id="SequenceFlow_64" sourceRef="CallActivity_38" targetRef="EndEvent_57"/>
-    </bpmn2:process>
-    <bpmn2:process id="Process_20" name="Send to Generic Receiver">
-        <bpmn2:extensionElements>
-            <ifl:property>
-                <key>transactionTimeout</key>
-                <value>30</value>
-            </ifl:property>
-            <ifl:property>
-                <key>processType</key>
-                <value>directCall</value>
-            </ifl:property>
-            <ifl:property>
-                <key>componentVersion</key>
-                <value>1.1</value>
-            </ifl:property>
-            <ifl:property>
-                <key>cmdVariantUri</key>
-                <value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</value>
-            </ifl:property>
-            <ifl:property>
-                <key>transactionalHandling</key>
-                <value>From Calling Process</value>
-            </ifl:property>
-        </bpmn2:extensionElements>
-        <bpmn2:subProcess id="SubProcess_46" name="Exception Subprocess 4">
-            <bpmn2:extensionElements>
-                <ifl:property>
-                    <key>componentVersion</key>
-                    <value>1.1</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>activityType</key>
-                    <value>ErrorEventSubProcessTemplate</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>cmdVariantUri</key>
-                    <value>ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::1.1.0</value>
-                </ifl:property>
-            </bpmn2:extensionElements>
-            <bpmn2:callActivity id="CallActivity_3" name="Delete 1">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>visibility</key>
-                        <value>global</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>messageId</key>
-                        <value>${property.entry_id}</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.7</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>activityType</key>
-                        <value>DBstorage</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::delete/version::1.7.1</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>operation</key>
-                        <value>delete</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>storageName</key>
-                        <value>Datastore_Retry</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-                <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-                <bpmn2:outgoing>SequenceFlow_91</bpmn2:outgoing>
-            </bpmn2:callActivity>
-            <bpmn2:endEvent id="EndEvent_89" name="Error End 1">
-                <bpmn2:incoming>SequenceFlow_90</bpmn2:incoming>
-                <bpmn2:incoming>SequenceFlow_91</bpmn2:incoming>
-                <bpmn2:errorEventDefinition>
-                    <bpmn2:extensionElements>
-                        <ifl:property>
-                            <key>cmdVariantUri</key>
-                            <value>ctype::FlowstepVariant/cname::ErrorEndEvent</value>
-                        </ifl:property>
-                        <ifl:property>
-                            <key>activityType</key>
-                            <value>EndErrorEvent</value>
-                        </ifl:property>
-                    </bpmn2:extensionElements>
-                </bpmn2:errorEventDefinition>
-            </bpmn2:endEvent>
-            <bpmn2:callActivity id="CallActivity_50" name="Content Modifier 3">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>bodyType</key>
-                        <value>expression</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>propertyTable</key>
-                        <value>&lt;row&gt;&lt;cell id='Action'&gt;Create&lt;/cell&gt;&lt;cell id='Type'&gt;constant&lt;/cell&gt;&lt;cell id='Value'&gt;Connection&lt;/cell&gt;&lt;cell id='Default'&gt;&lt;/cell&gt;&lt;cell id='Name'&gt;ErrorType&lt;/cell&gt;&lt;cell id='Datatype'&gt;&lt;/cell&gt;&lt;/row&gt;</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>headerTable</key>
-                        <value/>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>wrapContent</key>
-                        <value>${property.payload}</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.6</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>activityType</key>
-                        <value>Enricher</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::Enricher/version::1.6.3</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-                <bpmn2:incoming>SequenceFlow_51</bpmn2:incoming>
-                <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-            </bpmn2:callActivity>
-            <bpmn2:exclusiveGateway default="SequenceFlow_4" id="ExclusiveGateway_0" name="Check Retry">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.1</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>activityType</key>
-                        <value>ExclusiveGateway</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::ExclusiveGateway/version::1.1.2</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>throwException</key>
-                        <value>false</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-                <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-                <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-                <bpmn2:outgoing>SequenceFlow_93</bpmn2:outgoing>
-            </bpmn2:exclusiveGateway>
-            <bpmn2:callActivity id="CallActivity_66" name="Trigger Error Handling">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>processId</key>
-                        <value>Process_55</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.0</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>activityType</key>
-                        <value>ProcessCallElement</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.4</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>subActivityType</key>
-                        <value>NonLoopingProcess</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-                <bpmn2:incoming>SequenceFlow_93</bpmn2:incoming>
-                <bpmn2:outgoing>SequenceFlow_90</bpmn2:outgoing>
-            </bpmn2:callActivity>
-            <bpmn2:startEvent id="StartEvent_47" name="Error Start 4">
-                <bpmn2:outgoing>SequenceFlow_51</bpmn2:outgoing>
-                <bpmn2:errorEventDefinition>
-                    <bpmn2:extensionElements>
-                        <ifl:property>
-                            <key>cmdVariantUri</key>
-                            <value>ctype::FlowstepVariant/cname::ErrorStartEvent</value>
-                        </ifl:property>
-                        <ifl:property>
-                            <key>activityType</key>
-                            <value>StartErrorEvent</value>
-                        </ifl:property>
-                    </bpmn2:extensionElements>
-                </bpmn2:errorEventDefinition>
-            </bpmn2:startEvent>
-            <bpmn2:sequenceFlow id="SequenceFlow_91" sourceRef="CallActivity_3" targetRef="EndEvent_89"/>
-            <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="CallActivity_50" targetRef="ExclusiveGateway_0"/>
-            <bpmn2:sequenceFlow id="SequenceFlow_4" name="Datastore Retry Exceeded" sourceRef="ExclusiveGateway_0" targetRef="CallActivity_3">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>expressionType</key>
-                        <value>XML</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.0</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-            </bpmn2:sequenceFlow>
-            <bpmn2:sequenceFlow id="SequenceFlow_93" name="Datastore Retry" sourceRef="ExclusiveGateway_0" targetRef="CallActivity_66">
-                <bpmn2:extensionElements>
-                    <ifl:property>
-                        <key>expressionType</key>
-                        <value>NonXML</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>componentVersion</key>
-                        <value>1.0</value>
-                    </ifl:property>
-                    <ifl:property>
-                        <key>cmdVariantUri</key>
-                        <value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value>
-                    </ifl:property>
-                </bpmn2:extensionElements>
-                <bpmn2:conditionExpression id="FormalExpression_SequenceFlow_93_1784892188594" xsi:type="bpmn2:tFormalExpression">${header.SAP_DataStoreRetries} &lt; '3' or ${header.SAP_DataStoreRetries} = null</bpmn2:conditionExpression>
-            </bpmn2:sequenceFlow>
-            <bpmn2:sequenceFlow id="SequenceFlow_90" sourceRef="CallActivity_66" targetRef="EndEvent_89"/>
-            <bpmn2:sequenceFlow id="SequenceFlow_51" sourceRef="StartEvent_47" targetRef="CallActivity_50"/>
-        </bpmn2:subProcess>
-        <bpmn2:serviceTask id="ServiceTask_25" name="Send to Generic Receiver">
-            <bpmn2:extensionElements>
-                <ifl:property>
-                    <key>componentVersion</key>
-                    <value>1.0</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>activityType</key>
-                    <value>ExternalCall</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>cmdVariantUri</key>
-                    <value>ctype::FlowstepVariant/cname::ExternalCall/version::1.0.4</value>
-                </ifl:property>
-            </bpmn2:extensionElements>
-            <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
-            <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
-        </bpmn2:serviceTask>
-        <bpmn2:endEvent id="EndEvent_22" name="End 2">
-            <bpmn2:extensionElements>
-                <ifl:property>
-                    <key>cmdVariantUri</key>
-                    <value>ctype::FlowstepVariant/cname::EndEvent</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>activityType</key>
-                    <value>EndEvent</value>
-                </ifl:property>
-            </bpmn2:extensionElements>
-            <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
-        </bpmn2:endEvent>
-        <bpmn2:startEvent id="StartEvent_21" name="Start 2">
-            <bpmn2:extensionElements>
-                <ifl:property>
-                    <key>cmdVariantUri</key>
-                    <value>ctype::FlowstepVariant/cname::StartEvent</value>
-                </ifl:property>
-                <ifl:property>
-                    <key>activityType</key>
-                    <value>StartEvent</value>
-                </ifl:property>
-            </bpmn2:extensionElements>
-            <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
-        </bpmn2:startEvent>
-        <bpmn2:sequenceFlow id="SequenceFlow_28" sourceRef="ServiceTask_25" targetRef="EndEvent_22"/>
-        <bpmn2:sequenceFlow id="SequenceFlow_26" sourceRef="StartEvent_21" targetRef="ServiceTask_25"/>
     </bpmn2:process>
     <bpmn2:process id="Process_1" name="Integration Process">
         <bpmn2:extensionElements>
@@ -1233,6 +962,277 @@
         <bpmn2:sequenceFlow id="SequenceFlow_6" sourceRef="StartEvent_2" targetRef="CallActivity_5"/>
         <bpmn2:sequenceFlow id="SequenceFlow_19" sourceRef="CallActivity_17" targetRef="EndEvent_2"/>
     </bpmn2:process>
+    <bpmn2:process id="Process_20" name="Send to Generic Receiver">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <key>transactionTimeout</key>
+                <value>30</value>
+            </ifl:property>
+            <ifl:property>
+                <key>processType</key>
+                <value>directCall</value>
+            </ifl:property>
+            <ifl:property>
+                <key>componentVersion</key>
+                <value>1.1</value>
+            </ifl:property>
+            <ifl:property>
+                <key>cmdVariantUri</key>
+                <value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</value>
+            </ifl:property>
+            <ifl:property>
+                <key>transactionalHandling</key>
+                <value>From Calling Process</value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:subProcess id="SubProcess_46" name="Exception Connection Error">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <key>componentVersion</key>
+                    <value>1.1</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>activityType</key>
+                    <value>ErrorEventSubProcessTemplate</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>cmdVariantUri</key>
+                    <value>ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::1.1.0</value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:callActivity id="CallActivity_3" name="Delete 1">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>visibility</key>
+                        <value>global</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>messageId</key>
+                        <value>${property.entry_id}</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.7</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>activityType</key>
+                        <value>DBstorage</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::delete/version::1.7.1</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>operation</key>
+                        <value>delete</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>storageName</key>
+                        <value>Datastore_Retry</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+                <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+                <bpmn2:outgoing>SequenceFlow_91</bpmn2:outgoing>
+            </bpmn2:callActivity>
+            <bpmn2:endEvent id="EndEvent_89" name="Error End 1">
+                <bpmn2:incoming>SequenceFlow_90</bpmn2:incoming>
+                <bpmn2:incoming>SequenceFlow_91</bpmn2:incoming>
+                <bpmn2:errorEventDefinition>
+                    <bpmn2:extensionElements>
+                        <ifl:property>
+                            <key>cmdVariantUri</key>
+                            <value>ctype::FlowstepVariant/cname::ErrorEndEvent</value>
+                        </ifl:property>
+                        <ifl:property>
+                            <key>activityType</key>
+                            <value>EndErrorEvent</value>
+                        </ifl:property>
+                    </bpmn2:extensionElements>
+                </bpmn2:errorEventDefinition>
+            </bpmn2:endEvent>
+            <bpmn2:callActivity id="CallActivity_50" name="Content Modifier 3">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>bodyType</key>
+                        <value>expression</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>propertyTable</key>
+                        <value>&lt;row&gt;&lt;cell id='Action'&gt;Create&lt;/cell&gt;&lt;cell id='Type'&gt;constant&lt;/cell&gt;&lt;cell id='Value'&gt;Connection&lt;/cell&gt;&lt;cell id='Default'&gt;&lt;/cell&gt;&lt;cell id='Name'&gt;ErrorType&lt;/cell&gt;&lt;cell id='Datatype'&gt;&lt;/cell&gt;&lt;/row&gt;</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>headerTable</key>
+                        <value/>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>wrapContent</key>
+                        <value>${property.payload}</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.6</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>activityType</key>
+                        <value>Enricher</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::Enricher/version::1.6.3</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+                <bpmn2:incoming>SequenceFlow_51</bpmn2:incoming>
+                <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+            </bpmn2:callActivity>
+            <bpmn2:exclusiveGateway default="SequenceFlow_4" id="ExclusiveGateway_0" name="Check Retry">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.1</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>activityType</key>
+                        <value>ExclusiveGateway</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::ExclusiveGateway/version::1.1.2</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>throwException</key>
+                        <value>false</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+                <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+                <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+                <bpmn2:outgoing>SequenceFlow_93</bpmn2:outgoing>
+            </bpmn2:exclusiveGateway>
+            <bpmn2:callActivity id="CallActivity_66" name="Trigger Error Handling">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>processId</key>
+                        <value>Process_55</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.0</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>activityType</key>
+                        <value>ProcessCallElement</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.4</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>subActivityType</key>
+                        <value>NonLoopingProcess</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+                <bpmn2:incoming>SequenceFlow_93</bpmn2:incoming>
+                <bpmn2:outgoing>SequenceFlow_90</bpmn2:outgoing>
+            </bpmn2:callActivity>
+            <bpmn2:startEvent id="StartEvent_47" name="Error Start 4">
+                <bpmn2:outgoing>SequenceFlow_51</bpmn2:outgoing>
+                <bpmn2:errorEventDefinition>
+                    <bpmn2:extensionElements>
+                        <ifl:property>
+                            <key>cmdVariantUri</key>
+                            <value>ctype::FlowstepVariant/cname::ErrorStartEvent</value>
+                        </ifl:property>
+                        <ifl:property>
+                            <key>activityType</key>
+                            <value>StartErrorEvent</value>
+                        </ifl:property>
+                    </bpmn2:extensionElements>
+                </bpmn2:errorEventDefinition>
+            </bpmn2:startEvent>
+            <bpmn2:sequenceFlow id="SequenceFlow_91" sourceRef="CallActivity_3" targetRef="EndEvent_89"/>
+            <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="CallActivity_50" targetRef="ExclusiveGateway_0"/>
+            <bpmn2:sequenceFlow id="SequenceFlow_4" name="Datastore Retry Exceeded" sourceRef="ExclusiveGateway_0" targetRef="CallActivity_3">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>expressionType</key>
+                        <value>XML</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.0</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+            </bpmn2:sequenceFlow>
+            <bpmn2:sequenceFlow id="SequenceFlow_93" name="Datastore Retry" sourceRef="ExclusiveGateway_0" targetRef="CallActivity_66">
+                <bpmn2:extensionElements>
+                    <ifl:property>
+                        <key>expressionType</key>
+                        <value>NonXML</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>componentVersion</key>
+                        <value>1.0</value>
+                    </ifl:property>
+                    <ifl:property>
+                        <key>cmdVariantUri</key>
+                        <value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value>
+                    </ifl:property>
+                </bpmn2:extensionElements>
+                <bpmn2:conditionExpression id="FormalExpression_SequenceFlow_93_1789632230342" xsi:type="bpmn2:tFormalExpression">${header.SAP_DataStoreRetries} &lt; '3' or ${header.SAP_DataStoreRetries} = null</bpmn2:conditionExpression>
+            </bpmn2:sequenceFlow>
+            <bpmn2:sequenceFlow id="SequenceFlow_90" sourceRef="CallActivity_66" targetRef="EndEvent_89"/>
+            <bpmn2:sequenceFlow id="SequenceFlow_51" sourceRef="StartEvent_47" targetRef="CallActivity_50"/>
+        </bpmn2:subProcess>
+        <bpmn2:serviceTask id="ServiceTask_25" name="Send to Generic Receiver">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <key>componentVersion</key>
+                    <value>1.0</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>activityType</key>
+                    <value>ExternalCall</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>cmdVariantUri</key>
+                    <value>ctype::FlowstepVariant/cname::ExternalCall/version::1.0.4</value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
+        </bpmn2:serviceTask>
+        <bpmn2:endEvent id="EndEvent_22" name="End">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <key>cmdVariantUri</key>
+                    <value>ctype::FlowstepVariant/cname::EndEvent</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>activityType</key>
+                    <value>EndEvent</value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:startEvent id="StartEvent_21" name="Start">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <key>cmdVariantUri</key>
+                    <value>ctype::FlowstepVariant/cname::StartEvent</value>
+                </ifl:property>
+                <ifl:property>
+                    <key>activityType</key>
+                    <value>StartEvent</value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:sequenceFlow id="SequenceFlow_28" sourceRef="ServiceTask_25" targetRef="EndEvent_22"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_26" sourceRef="StartEvent_21" targetRef="ServiceTask_25"/>
+    </bpmn2:process>
     <bpmn2:process id="Process_72" name="Reprocess from Datastore">
         <bpmn2:extensionElements>
             <ifl:property>
@@ -1345,11 +1345,11 @@
             <bpmndi:BPMNShape bpmnElement="CallActivity_76" id="BPMNShape_CallActivity_76">
                 <dc:Bounds height="60.0" width="100.0" x="338.0" y="623.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="CallActivity_33" id="BPMNShape_CallActivity_33">
-                <dc:Bounds height="60.0" width="100.0" x="1542.0" y="731.0"/>
-            </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="StartEvent_56" id="BPMNShape_StartEvent_56">
                 <dc:Bounds height="32.0" width="32.0" x="1190.0" y="665.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_33" id="BPMNShape_CallActivity_33">
+                <dc:Bounds height="60.0" width="100.0" x="1542.0" y="731.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="CallActivity_78" id="BPMNShape_CallActivity_78">
                 <dc:Bounds height="60.0" width="100.0" x="498.0" y="623.0"/>
